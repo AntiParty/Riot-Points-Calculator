@@ -1,6 +1,7 @@
 let items = [];
 let totalRP = 0;
-let totalCost = 0;
+let selectedItems = null; 
+let itemsAdded = false;
 
 // Define the VP packages available
 const vpPackages = [
@@ -11,6 +12,96 @@ const vpPackages = [
     { vp: 5350, cost: 49.99 },
     { vp: 11000, cost: 99.99 }
 ];
+
+// Define currency conversion rates (example rates)
+const currencyRates = {
+    USD: 1,         // 1 USD = 1 USD (base currency)
+    EUR: 0.88,      // 1 USD = 0.88 EUR
+    GBP: 0.78,      // 1 USD = 0.78 GBP
+    CAD: 0.73       // 1 USD = 0.73 CAD
+    // Add more currencies and rates as needed
+};
+
+function calculateVP(rpCost, currency) {
+    // Validate RP cost (optional: you may add more specific validation)
+    if (isNaN(rpCost) || rpCost <= 0) {
+        alert('Please enter a valid RP cost.');
+        return; // Exit function early if validation fails
+    }
+
+    // Perform calculations based on rpCost and currency
+    let vpCost = rpCost * getConversionRate(currency); // Example function to get conversion rate
+
+    // Find VP packages that are closest to or exceed the calculated VP cost
+    let selectedPackages = [];
+    let remainingVP = vpCost;
+
+    for (let i = vpPackages.length - 1; i >= 0; i--) {
+        while (remainingVP >= vpPackages[i].vp) {
+            remainingVP -= vpPackages[i].vp;
+            selectedPackages.push(vpPackages[i]);
+        }
+    }
+
+    // If there's remaining VP needed, add the smallest package to cover it
+    if (remainingVP > 0) {
+        selectedPackages.push(vpPackages[0]); // Add the smallest package
+    }
+
+    // Update UI with selected VP packages
+    updateVPPackages(selectedPackages);
+}
+
+function updateVPPackages(packages) {
+    const vpPackagesDiv = document.getElementById('vpPackages');
+    vpPackagesDiv.innerHTML = '';
+
+    let totalCost = 0;
+
+    packages.forEach(pkg => {
+        const packageElement = document.createElement('p');
+        packageElement.textContent = `${pkg.vp} VP - $${pkg.cost.toFixed(2)}`;
+        vpPackagesDiv.appendChild(packageElement);
+
+        totalCost += pkg.cost;
+    });
+
+    // Display the total cost in the selected currency if items have been added
+    if (itemsAdded) {
+        const selectedCurrency = document.getElementById('currency').value;
+        const totalCostElement = document.getElementById('totalCost');
+
+        if (totalCostElement) {
+            totalCostElement.textContent = `Total $: ${selectedCurrency} ${totalCost.toFixed(2)}`;
+        } else {
+            console.error('Element with id="totalCost" not found.');
+        }
+    }
+}
+
+
+function getConversionRate(currency) {
+    return currencyRates[currency] || 1; // Default to 1 if currency rate not found (USD)
+}
+
+// Initialize the application after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Add item button click event handler
+    const addItemButton = document.getElementById('addItemButton');
+    addItemButton.addEventListener('click', function() {
+        addItem();
+    });
+
+    // Currency select change event handler
+    const currencySelect = document.getElementById('currency');
+    currencySelect.addEventListener('change', function() {
+        // Update selectedItems with currency selection
+        if (selectedItems) {
+            selectedItems.currency = currencySelect.value;
+        }
+    });
+});
+
 
 function addItem() {
     // Get the RP cost entered by the user
@@ -25,120 +116,45 @@ function addItem() {
         return; // Exit function early if validation fails
     }
 
+    // Store selected items
+    selectedItems = {
+        rpCost: parseFloat(rpCost),
+        currency: currency
+    };
+
+    itemsAdded = true; // Set flag to true after adding items
+
     // Proceed with adding the item and calculating VP
-    calculateVP(parseFloat(rpCost), currency); // Pass rpCost and currency to calculateVP function
+    calculateVP(selectedItems.rpCost, selectedItems.currency); // Pass rpCost and currency to calculateVP function
 }
 
-
-function updateItemList() {
-    const itemList = document.getElementById('itemList');
-    itemList.innerHTML = '';
-
-    items.forEach((cost, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `Item ${index + 1}: ${cost} RP`;
-        itemList.appendChild(listItem);
-    });
-}
-
-function updateTotalRP() {
-    document.getElementById('totalRP').textContent = totalRP;
-}
-
-function calculateVP(rpCost, currency) {
-    // Validate RP cost (optional: you may add more specific validation)
-    if (isNaN(rpCost) || rpCost <= 0) {
-        alert('Please enter a valid RP cost.');
-        return; // Exit function early if validation fails
-    }
-
-    // Perform calculations based on rpCost and currency
-    let vpCost = rpCost * getConversionRate(currency); // Example function to get conversion rate
-
-    // Update UI with calculated VP cost
-    document.getElementById('totalVP').textContent = vpCost.toFixed(2);
-}
-
-function updateVPPackages(packages, totalCost) {
-    const vpPackagesDiv = document.getElementById('vpPackages');
-    vpPackagesDiv.innerHTML = '';
-
-    packages.forEach(pkg => {
-        const packageElement = document.createElement('p');
-        packageElement.textContent = `${pkg.vp} VP - $${pkg.cost.toFixed(2)}`;
-        vpPackagesDiv.appendChild(packageElement);
-    });
-
-    const totalCostElement = document.createElement('p');
-    totalCostElement.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-    vpPackagesDiv.appendChild(totalCostElement);
-}
-
-function resetCalculator() {
-    items = [];
-    totalRP = 0;
-    updateItemList();
-    updateTotalRP();
-    updateVPPackages([], 0); // Reset VP packages display
-}
-// Define currency conversion rates (example rates)
-const currencyRates = {
-    USD: 1,         // 1 USD = 1 USD (base currency)
-    EUR: 0.88,      // 1 USD = 0.88 EUR
-    GBP: 0.78,       // 1 USD = 0.78 GBP
-    CAD: 0.73
-    // Add more currencies and rates as needed
-};
-
-// Function to update VP costs based on selected currency
 function updateVPCosts() {
     const selectedCurrency = document.getElementById('currency').value;
     const vpPackagesDiv = document.getElementById('vpPackages');
 
+    // Check if vpPackagesDiv is null (element with id="vpPackages" not found)
+    if (!vpPackagesDiv) {
+        console.error('Element with id="vpPackages" not found in the DOM.');
+        return;
+    }
+
     // Clear previous content
     vpPackagesDiv.innerHTML = '';
 
-    // Get the selected currency rate
-    const rate = currencyRates[selectedCurrency];
-
     // Calculate VP costs in selected currency
     vpPackages.forEach(pkg => {
-        const convertedCost = pkg.cost * rate;
+        const convertedCost = pkg.cost * getConversionRate(selectedCurrency);
         const packageElement = document.createElement('p');
         packageElement.textContent = `${pkg.vp} VP - ${selectedCurrency} ${convertedCost.toFixed(2)}`;
         vpPackagesDiv.appendChild(packageElement);
     });
 }
-function calculateVP() {
-    let vpNeeded = totalRP;
-    let selectedPackages = [];
-    let totalCost = 0;
 
-    for (let i = vpPackages.length - 1; i >= 0; i--) {
-        while (vpNeeded >= vpPackages[i].vp) {
-            vpNeeded -= vpPackages[i].vp;
-            selectedPackages.push(vpPackages[i]);
-            totalCost += vpPackages[i].cost;
-        }
-    }
-
-    if (vpNeeded > 0) {
-        selectedPackages.push(vpPackages[0]);
-        totalCost += vpPackages[0].cost;
-    }
-
-    // Update total VP and VP packages for selected currency
-    updateTotalVP(selectedPackages);
-    updateVPPackages(selectedPackages, totalCost);
+function resetCalculator() {
+    items = [];
+    totalRP = 0;
+    itemsAdded = false; // Reset flag
+    updateItemList();
+    updateTotalRP();
+    updateVPPackages([], 0); // Reset VP packages display
 }
-
-function updateTotalVP(packages) {
-    const selectedCurrency = document.getElementById('currency').value;
-    const rate = currencyRates[selectedCurrency];
-    const totalVP = packages.reduce((total, pkg) => total + pkg.vp, 0);
-    const convertedTotalCost = totalCost * rate;
-
-    document.getElementById('totalVP').textContent = totalVP;
-    document.getElementById('totalCost').textContent = `${selectedCurrency} ${convertedTotalCost.toFixed(2)}`;
-}
-

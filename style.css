@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #282c34;
+    background-color: #202020;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,7 +22,7 @@ body {
 
 h1 {
     font-size: 28px;
-    color: #61dafb;
+    color: #00c4fa;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -87,12 +87,16 @@ ul li {
     margin-bottom: 5px;
     font-size: 16px;
     color: #ffffff;
-    animation: slideIn 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes slideIn {
     from { transform: translateX(-100%); }
     to { transform: translateX(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 100;}
 }
 
 h3 {
@@ -119,9 +123,16 @@ h3 {
 
 #vpPackages {
     margin-top: 10px;
+    animation: fadein 2.5s;
 }
 
 #vpPackages p {
     font-size: 16px;
     color: #ffffff;
+    animation: fadein 2.5s;
+}
+.total-cost {
+    color: green; /* Change color to your preferred color */
+    font-weight: bold; /* Optional: Make the text bold */
+    /* Add any other styles as needed */
 }
