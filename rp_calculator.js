@@ -1,160 +1,121 @@
 let items = [];
 let totalRP = 0;
-let selectedItems = null; 
-let itemsAdded = false;
+let totalCost = 0;
+let vpPackages = [];
 
-// Define the VP packages available
-const vpPackages = [
-    { vp: 475, cost: 4.99 },
-    { vp: 1000, cost: 9.99 },
-    { vp: 2050, cost: 19.99 },
-    { vp: 3650, cost: 34.99 },
-    { vp: 5350, cost: 49.99 },
-    { vp: 11000, cost: 99.99 }
-];
-
-// Define currency conversion rates (example rates)
-const currencyRates = {
-    USD: 1,         // 1 USD = 1 USD (base currency)
-    EUR: 0.88,      // 1 USD = 0.88 EUR
-    GBP: 0.78,      // 1 USD = 0.78 GBP
-    CAD: 0.73       // 1 USD = 0.73 CAD
-    // Add more currencies and rates as needed
-};
-
-function calculateVP(rpCost, currency) {
-    // Validate RP cost (optional: you may add more specific validation)
-    if (isNaN(rpCost) || rpCost <= 0) {
-        alert('Please enter a valid RP cost.');
-        return; // Exit function early if validation fails
-    }
-
-    // Perform calculations based on rpCost and currency
-    let vpCost = rpCost * getConversionRate(currency); // Example function to get conversion rate
-
-    // Find VP packages that are closest to or exceed the calculated VP cost
-    let selectedPackages = [];
-    let remainingVP = vpCost;
-
-    for (let i = vpPackages.length - 1; i >= 0; i--) {
-        while (remainingVP >= vpPackages[i].vp) {
-            remainingVP -= vpPackages[i].vp;
-            selectedPackages.push(vpPackages[i]);
-        }
-    }
-
-    // If there's remaining VP needed, add the smallest package to cover it
-    if (remainingVP > 0) {
-        selectedPackages.push(vpPackages[0]); // Add the smallest package
-    }
-
-    // Update UI with selected VP packages
-    updateVPPackages(selectedPackages);
-}
-
-function updateVPPackages(packages) {
-    const vpPackagesDiv = document.getElementById('vpPackages');
-    vpPackagesDiv.innerHTML = '';
-
-    let totalCost = 0;
-
-    packages.forEach(pkg => {
-        const packageElement = document.createElement('p');
-        packageElement.textContent = `${pkg.vp} VP - $${pkg.cost.toFixed(2)}`;
-        vpPackagesDiv.appendChild(packageElement);
-
-        totalCost += pkg.cost;
-    });
-
-    // Display the total cost in the selected currency if items have been added
-    if (itemsAdded) {
-        const selectedCurrency = document.getElementById('currency').value;
-        const totalCostElement = document.getElementById('totalCost');
-
-        if (totalCostElement) {
-            totalCostElement.textContent = `Total $: ${selectedCurrency} ${totalCost.toFixed(2)}`;
-        } else {
-            console.error('Element with id="totalCost" not found.');
-        }
+// Function to fetch VP packages from the JSON file
+async function fetchVPPackages() {
+    try {
+        const response = await fetch('vpPackages.json');
+        vpPackages = await response.json();
+        console.log('VP Packages fetched:', vpPackages);
+    } catch (error) {
+        console.error('Error fetching VP packages:', error);
     }
 }
 
-
-function getConversionRate(currency) {
-    return currencyRates[currency] || 1; // Default to 1 if currency rate not found (USD)
-}
-
-// Initialize the application after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Add item button click event handler
-    const addItemButton = document.getElementById('addItemButton');
-    addItemButton.addEventListener('click', function() {
-        addItem();
-    });
-
-    // Currency select change event handler
-    const currencySelect = document.getElementById('currency');
-    currencySelect.addEventListener('change', function() {
-        // Update selectedItems with currency selection
-        if (selectedItems) {
-            selectedItems.currency = currencySelect.value;
-        }
-    });
-});
-
+// Call the function to fetch VP packages on page load
+fetchVPPackages();
 
 function addItem() {
-    // Get the RP cost entered by the user
     let rpCost = document.getElementById('itemCost').value.trim();
-    
-    // Get the selected currency
     let currency = document.getElementById('currency').value;
 
-    // Check if RP cost and currency are provided
     if (rpCost === '' || currency === 'none') {
         alert('Please enter RP cost and select a currency.');
-        return; // Exit function early if validation fails
-    }
-
-    // Store selected items
-    selectedItems = {
-        rpCost: parseFloat(rpCost),
-        currency: currency
-    };
-
-    itemsAdded = true; // Set flag to true after adding items
-
-    // Proceed with adding the item and calculating VP
-    calculateVP(selectedItems.rpCost, selectedItems.currency); // Pass rpCost and currency to calculateVP function
-}
-
-function updateVPCosts() {
-    const selectedCurrency = document.getElementById('currency').value;
-    const vpPackagesDiv = document.getElementById('vpPackages');
-
-    // Check if vpPackagesDiv is null (element with id="vpPackages" not found)
-    if (!vpPackagesDiv) {
-        console.error('Element with id="vpPackages" not found in the DOM.');
         return;
     }
 
-    // Clear previous content
+    items.push(parseFloat(rpCost));
+    totalRP += parseFloat(rpCost);
+    updateItemList();
+    updateTotalRP(totalRP);
+}
+
+function updateItemList() {
+    const itemList = document.getElementById('itemList');
+    itemList.innerHTML = '';
+
+    items.forEach((cost, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Item ${index + 1}: ${cost} RP`;
+        itemList.appendChild(listItem);
+    });
+}
+
+function updateTotalRP(totalRP) {
+    document.getElementById('totalRPValue').textContent = totalRP.toFixed(0);
+}
+
+function calculateVP() {
+    let vpNeeded = totalRP;
+    let selectedPackages = [];
+    let totalCost = 0;
+    const selectedCurrency = document.getElementById('currency').value;
+
+    for (let i = vpPackages.length - 1; i >= 0; i--) {
+        while (vpNeeded >= vpPackages[i].vp) {
+            vpNeeded -= vpPackages[i].vp;
+            selectedPackages.push(vpPackages[i]);
+            totalCost += vpPackages[i].costs[selectedCurrency];
+        }
+    }
+
+    if (vpNeeded > 0) {
+        selectedPackages.push(vpPackages[0]);
+        totalCost += vpPackages[0].costs[selectedCurrency];
+    }
+
+    updateTotalVP(selectedPackages);
+    updateVPPackages(selectedPackages, totalCost, selectedCurrency);
+}
+
+function updateTotalVP(packages) {
+    const totalVP = packages.reduce((total, pkg) => total + pkg.vp, 0);
+    document.getElementById('totalVPValue').textContent = totalVP.toFixed(2);
+}
+
+function updateVPPackages(packages, totalCost, currency) {
+    const vpPackagesDiv = document.getElementById('vpPackages');
     vpPackagesDiv.innerHTML = '';
 
-    // Calculate VP costs in selected currency
-    vpPackages.forEach(pkg => {
-        const convertedCost = pkg.cost * getConversionRate(selectedCurrency);
+    packages.forEach(pkg => {
         const packageElement = document.createElement('p');
-        packageElement.textContent = `${pkg.vp} VP - ${selectedCurrency} ${convertedCost.toFixed(2)}`;
+        packageElement.textContent = `${pkg.vp} VP - ${currency} ${pkg.costs[currency].toFixed(2)}`;
         vpPackagesDiv.appendChild(packageElement);
     });
+
+    const totalCostElement = document.createElement('p');
+    totalCostElement.innerHTML = `Total Cost: <span class="total-cost">${currency} ${totalCost.toFixed(2)}</span>`;
+    vpPackagesDiv.appendChild(totalCostElement);
 }
 
 function resetCalculator() {
     items = [];
     totalRP = 0;
-    itemsAdded = false; // Reset flag
     updateItemList();
-    updateTotalRP();
-    updateVPPackages([], 0); // Reset VP packages display
+    updateTotalRP(0);
+    updateVPPackages([], 0, 'USD'); // Assuming USD is default
 }
+
+const currencyRates = {
+    USD: 1,
+    EUR: 0.88,
+    GBP: 0.78,
+    CAD: 0.73
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addItemButton = document.getElementById('addItemButton');
+    addItemButton.addEventListener('click', function() {
+        addItem();
+        calculateVP();
+    });
+
+    const currencySelect = document.getElementById('currency');
+    currencySelect.addEventListener('change', function() {
+        if (totalRP > 0) {
+            calculateVP();
+        }
+    });
+});

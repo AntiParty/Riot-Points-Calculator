@@ -9,13 +9,11 @@
 <body>
     <div class="container">
         <h1 class="calculator-header">Riot Points Calculator</h1>
-
         <div class="input-section">
             <label for="itemCost">Enter item cost (in VP):</label>
             <input type="number" id="itemCost" min="0" max="">
             <button id="addItemButton">Add Item</button>
         </div>
-
         <div class="currency-section">
             <label for="currency">Select Currency:</label>
             <select id="currency">
@@ -26,16 +24,16 @@
                 <option value="CAD">CAD (C$)</option>
             </select>
         </div>
-
         <div class="items-section">
-            <h2>Selected VP Packages:</h2>
+            <h2>Items</h2>
+            <ul id="itemList"></ul>
+            <p>Total RP: <span id="totalRPValue">0</span></p>
+            <p>Total VP: <span id="totalVPValue">0</span></p>
             <div id="vpPackages"></div>
-            <h2>Total Cost: <span id="totalCost" class="total-cost"></span></h2>
         </div>
-
-        <button class="reset-button" onclick="resetCalculator()">Clear</button>
+        <button class="reset-button" onclick="resetCalculator()">Reset</button>
         <footer>
-            <p>Made by <span class="author">Antiparty</span></p>
+            <p class="author">Made by antiparty</p>
         </footer>
     </div>
     <script src="rp_calculator.js"></script>

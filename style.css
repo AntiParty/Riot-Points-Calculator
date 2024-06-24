@@ -18,84 +18,26 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     max-width: 600px;
     width: 100%;
+    text-align: center;
 }
 
 .calculator-header {
-    font-size: 2.5rem;
+    font-size: 2.5rem; /* Adjust size as needed */
     font-weight: bold;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Adding shadow effect */
+    color: #ffffff; /* Text color */
+    margin-bottom: 20px; /* Space below header */
 }
 
-h1 {
-    font-size: 28px;
-    color: #00c4fa;
-    text-align: center;
+.input-section, .currency-section, .items-section {
     margin-bottom: 20px;
 }
 
-.input-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    margin-bottom: 20px;
-}
-
-.input-section label {
+label {
     font-size: 16px;
     color: #ffffff;
-    margin-right: 10px;
 }
 
-.input-section input[type="number"] {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #444;
-    border-radius: 5px 0 0 5px;
-    background-color: #2a2a2a;
-    color: #ffffff;
-    width: 150px;
-    margin-right: 10px;
-    transition: all 0.3s ease;
-}
-
-.input-section input[type="number"]:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.input-section button {
-    padding: 10px 15px;
-    font-size: 16px;
-    color: #ffffff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.input-section button:hover {
-    background-color: #0056b3;
-}
-
-.currency-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.currency-section label {
-    font-size: 16px;
-    color: #ffffff;
-    margin-right: 10px;
-}
-
-.currency-section select {
+input[type="number"], select {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #444;
@@ -103,16 +45,28 @@ h1 {
     background-color: #2a2a2a;
     color: #ffffff;
     width: 150px;
+    margin-right: 10px;
     transition: all 0.3s ease;
 }
 
-.currency-section select:focus {
+input[type="number"]:focus, select:focus {
     border-color: #007bff;
     outline: none;
 }
 
-.items-section {
-    text-align: center; /* Center align items in this section */
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
 
 .items-section h2 {
@@ -135,6 +89,16 @@ ul li {
     font-size: 16px;
     color: #ffffff;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 100; }
 }
 
 h3 {
@@ -182,6 +146,7 @@ footer {
     text-align: center;
     margin-top: 20px;
     padding: 10px 0;
+    /* Example: Background color for footer */
 }
 
 .author {
