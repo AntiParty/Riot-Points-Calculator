@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Points Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Riot Points Calculator</h1>
+
+        <div class="input-section">
+            <label for="itemCost">Enter item cost (in RP):</label>
+            <input type="number" id="itemCost" min="0">
+            <button onclick="addItem()">Add Item</button>
+        </div>
+
+        <div class="currency-section">
+            <label for="currency">Select Currency:</label>
+            <select id="currency" onchange="updateVPCosts()">
+                <option value="USD" selected>USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="CAD">CAD ($)</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+
+        <div class="items-section">
+            <h2>Items</h2>
+            <ul id="itemList"></ul>
+            <h3>Total RP Needed: <span id="totalRP">0</span></h3>
+            <h3>Total VP Needed: <span id="totalVP">0</span></h3>
+            <div id="vpPackages"></div>
+            <button class="reset-button" onclick="resetCalculator()">Reset</button>
+        </div>
+    </div>
+
+    <script src="rp_calculator.js"></script>
+</body>
+
+</html>
