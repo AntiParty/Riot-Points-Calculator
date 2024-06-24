@@ -1,5 +1,6 @@
 let items = [];
 let totalRP = 0;
+let totalCost = 0;
 
 // Define the VP packages available
 const vpPackages = [
