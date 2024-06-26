@@ -24,11 +24,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Inject secret into rp_calculator.js
+      - name: Inject Discord webhook URL into rp_calculator.js
         run: |
-          # Inject Discord webhook URL into rp_calculator.js
+          # Inject the webhook URL into rp_calculator.js.template
           echo "const webhookURL = '${{ secrets.DISCORD_WEBHOOK }}';" > rp_calculator.js
-          cat rp_calculator.js >> rp_calculator.js
+          cat rp_calculator.js.template >> rp_calculator.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
