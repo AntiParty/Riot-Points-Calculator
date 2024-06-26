@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riot Points Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <script src="secret.js"></script>
-    <script src="rp_calculator.js"></script>
+    <script>
+        window.env = {
+            DISCORD_WEBHOOK_URL: '${{secrets.DISCORD_WEBHOOK_URL }}'
+        }
+    </script>
+    <script src="rp_calculator.js" defer></script>
 </head>
 <body>
     <div class="container">
