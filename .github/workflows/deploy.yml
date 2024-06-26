@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and Deploy to GitHub Pages
         run: |
-          npm run build  # Adjust based on your build script
-          npm run deploy  # Adjust based on your deploy script
+          # Replace this with your build and deploy commands
+          echo "Build and deploy steps go here"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for deploying to GitHub Pages
 
