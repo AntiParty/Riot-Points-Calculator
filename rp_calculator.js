@@ -1,3 +1,4 @@
+window.DISCORD_WEBHOOK_URL='';
 let items = [];
 let totalRP = 0;
 let totalCost = 0;
