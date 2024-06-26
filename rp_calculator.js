@@ -138,7 +138,15 @@ document.getElementById('feedbackForm').addEventListener('submit', function(even
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
-    const webhookURL = window.DISCORD_WEBHOOK_URL;
+    let webhookURL;
+
+    // Check if running in a browser environment
+    if (typeof window !== 'undefined' && window.DISCORD_WEBHOOK_URL) {
+        webhookURL = window.DISCORD_WEBHOOK_URL;
+    } else {
+        // Handle non-browser environment (e.g., Node.js)
+        webhookURL = process.env.DISCORD_WEBHOOK_URL; // Adjust as per your environment setup
+    }
 
     try {
         if (!webhookURL) {
