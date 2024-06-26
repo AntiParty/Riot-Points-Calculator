@@ -27,7 +27,7 @@ jobs:
       - name: Inject environment variable into JavaScript
         run: |
           echo "window.env = { DISCORD_WEBHOOK_URL: '${{ secrets.DISCORD_WEBHOOK_URL }}' };" > env.js
-          sed -i "1s/^/import './env.js';\n/" rp_calculator.js
+          cat env.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
