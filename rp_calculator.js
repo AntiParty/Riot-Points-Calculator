@@ -1,4 +1,4 @@
-import './env.js';
+
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
