@@ -33,5 +33,5 @@ jobs:
 
       - name: Inject secret into JS
         run: |
-          echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
+          echo "window.DISCORD_WEBHOOK_URL=' ${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
           cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
