@@ -19,7 +19,7 @@ jobs:
     - name: Inject secret into JS
       run: |
         echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > js/secret.js
-        cat js/secret.js js/main.js > js/temp.js && mv js/temp.js js/main.js
+        cat js/secret.js js/rp_calculator.js > js/temp.js && mv js/temp.js js/rp_calculator.js
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
