@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages and Send Feedback
 
 on:
   push:
@@ -6,25 +6,28 @@ on:
       - main  # Or the branch you want to deploy from
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Ensure js directory exists
-      run: mkdir -p js
+      - name: Inject secret into JS
+        run: |
+          echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
+          cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
+        working-directory: ${{ github.workspace }}
 
-    - name: Inject secret into JS
-  run: |
-    echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
-    cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
-  working-directory: ${{ github.workspace }}
+      - name: Build and Deploy to GitHub Pages
+        run: |
+          npm run build  # Adjust based on your build script
+          npm run deploy  # Adjust based on your deploy script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for deploying to GitHub Pages
 
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        publish_dir: ./  # Publish from the root directory
+      - name: Send Feedback
+        run: |
+          node send_feedback.js
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Discord webhook URL
