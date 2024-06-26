@@ -1,33 +1,43 @@
-name: Deploy to GitHub Pages and Send Feedback
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Or the branch you want to deploy from
+      - main  # Change this to your main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Inject secret into JS
         run: |
           echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
           cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
-        working-directory: ${{ github.workspace }}
 
-      - name: Build and Deploy to GitHub Pages
+      - name: Install dependencies and build
         run: |
-          # Replace this with your build and deploy commands
-          echo "Build and deploy steps go here"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for deploying to GitHub Pages
+          npm install
+          npm run build  # Adjust based on your build script
 
-      - name: Send Feedback
+      - name: Commit changes
         run: |
-          node rp_calculator.js
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Discord webhook URL
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Update Discord webhook URL"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.2
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages  # Adjust based on your deployment configuration
+          FOLDER: ./  # Adjust based on your project directory
