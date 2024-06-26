@@ -28,6 +28,6 @@ jobs:
 
       - name: Send Feedback
         run: |
-          node send_feedback.js
+          node rp_calculator.js
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Discord webhook URL
