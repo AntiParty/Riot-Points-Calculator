@@ -141,12 +141,16 @@ async function sendFeedback(feedback) {
     const webhookURL = window.DISCORD_WEBHOOK_URL;
 
     try {
+        if (!webhookURL) {
+            throw new Error('Webhook URL is not defined.');
+        }
+
         const response = await fetch(webhookURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ content: "**User FeedBack**: " + feedback })
+            body: JSON.stringify({ content: `**User Feedback:** ${feedback}` })
         });
 
         if (response.ok) {
@@ -155,6 +159,6 @@ async function sendFeedback(feedback) {
             console.error('Error sending feedback:', response.statusText);
         }
     } catch (error) {
-        console.error('Error sending feedback:', error);
+        console.error('Error sending feedback:', error.message);
     }
 }
