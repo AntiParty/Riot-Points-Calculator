@@ -15,14 +15,5 @@ module.exports = {
             systemvars: true, // Load all the predefined 'process.env' variables
             defaults: false // Do not override 'process.env' variables
         })
-    ],
-    // Resolve configuration to handle modules like 'fs' or 'child_process'
-    resolve: {
-        fallback: {
-            fs: false,
-            child_process: false,
-            crypto: false,
-            os: false
-        }
-    }
+    ]
 };
