@@ -4,10 +4,10 @@
     "description": "A calculator for Riot Points (RP) with Discord integration.",
     "main": "rp_calculator.js",
     "scripts": {
-      "start": "node rp_calculator.js"
-      
+      "start": "node rp_calculator.js",
+      "build": "echo 'Build script placeholder'"  
     },
-    "author": "antiparty",
+    "author": "Your Name",
     "license": "MIT",
     "dependencies": {}
   }
