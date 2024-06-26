@@ -1,0 +1,25 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Inject secret into JS
+      run: |
+        echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > js/secret.js
+        cat js/secret.js js/main.js > js/temp.js && mv js/temp.js js/main.js
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./  # Adjust to your build directory

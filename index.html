@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riot Points Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="secret.js"></script>
 </head>
 <body>
     <div class="container">
@@ -33,6 +34,18 @@
             <div id="vpPackages"></div>
         </div>
         <button class="reset-button" onclick="resetCalculator()">Reset</button>
+        <button id="feedbackButton">Submit Feedback</button>
+        <div id="feedbackModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Feedback</h2>
+                <form id="feedbackForm">
+                    <label for="feedback">Your Feedback:</label>
+                    <textarea id="feedback" rows="4"></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
         <footer>
             <p class="author">Made by antiparty©</p>
         </footer>

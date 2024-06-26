@@ -119,3 +119,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+// Feedback Modal Event Listeners
+document.getElementById('feedbackButton').addEventListener('click', function() {
+    document.getElementById('feedbackModal').style.display = 'block';
+});
+
+document.querySelector('.close').addEventListener('click', function() {
+    document.getElementById('feedbackModal').style.display = 'none';
+});
+
+document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const feedback = document.getElementById('feedback').value;
+    sendFeedback(feedback);
+    alert('Thank you for your feedback!');
+    document.getElementById('feedbackModal').style.display = 'none';
+});
+
+// Function to send feedback to Discord via webhook
+async function sendFeedback(feedback) {
+    const webhookURL = window.DISCORD_WEBHOOK_URL;
+
+    try {
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: "**User FeedBack**: " + feedback })
+        });
+
+        if (response.ok) {
+            console.log('Feedback sent successfully');
+        } else {
+            console.error('Error sending feedback:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error sending feedback:', error);
+    }
+}
