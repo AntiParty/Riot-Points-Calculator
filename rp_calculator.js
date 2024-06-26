@@ -1,7 +1,9 @@
+import './env.js';
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
 console.log('DISCORD_WEBHOOK_URL:', window.env.DISCORD_WEBHOOK_URL);
+
 
 // Function to fetch VP packages from the JSON file (for browser)
 async function fetchVPPackages() {
