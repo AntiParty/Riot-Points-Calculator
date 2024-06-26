@@ -15,7 +15,9 @@ async function fetchVPPackages() {
 }
 
 // Call the function to fetch VP packages on page load
-fetchVPPackages();
+if (typeof window !== 'undefined') {
+    fetchVPPackages(); // Fetch only in browser environment
+}
 
 function addItem() {
     let rpCost = document.getElementById('itemCost').value.trim();
@@ -105,43 +107,47 @@ const currencyRates = {
     CAD: 0.73
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    const addItemButton = document.getElementById('addItemButton');
-    addItemButton.addEventListener('click', function() {
-        addItem();
-        calculateVP();
-    });
-
-    const currencySelect = document.getElementById('currency');
-    currencySelect.addEventListener('change', function() {
-        if (totalRP > 0) {
+// This section should be adjusted for Node.js environment or removed if not applicable
+if (typeof window !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const addItemButton = document.getElementById('addItemButton');
+        addItemButton.addEventListener('click', function() {
+            addItem();
             calculateVP();
-        }
+        });
+
+        const currencySelect = document.getElementById('currency');
+        currencySelect.addEventListener('change', function() {
+            if (totalRP > 0) {
+                calculateVP();
+            }
+        });
     });
-});
-// Feedback Modal Event Listeners
-document.getElementById('feedbackButton').addEventListener('click', function() {
-    document.getElementById('feedbackModal').style.display = 'block';
-});
 
-document.querySelector('.close').addEventListener('click', function() {
-    document.getElementById('feedbackModal').style.display = 'none';
-});
+    // Feedback Modal Event Listeners
+    document.getElementById('feedbackButton').addEventListener('click', function() {
+        document.getElementById('feedbackModal').style.display = 'block';
+    });
 
-document.getElementById('feedbackForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const feedback = document.getElementById('feedback').value;
-    sendFeedback(feedback);
-    alert('Thank you for your feedback!');
-    document.getElementById('feedbackModal').style.display = 'none';
-});
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('feedbackModal').style.display = 'none';
+    });
+
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const feedback = document.getElementById('feedback').value;
+        sendFeedback(feedback);
+        alert('Thank you for your feedback!');
+        document.getElementById('feedbackModal').style.display = 'none';
+    });
+}
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
     let webhookURL;
 
     // Check if running in a browser environment
-    if (typeof window !== 'undefined' && window.DISCORD_WEBHOOK_URL) {
+    if (typeof window !== 'undefined') {
         webhookURL = window.DISCORD_WEBHOOK_URL;
     } else {
         // Handle non-browser environment (e.g., Node.js)
