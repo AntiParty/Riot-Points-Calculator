@@ -161,7 +161,7 @@ function resetCalculator() {
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
-    const webhookURL = window.env.DISCORD_WEBHOOK_URL;
+    const webhookURL = process.env.DISCORD_WEBHOOK_URL;
 
     try {
         if (!webhookURL) {
