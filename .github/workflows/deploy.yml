@@ -24,14 +24,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Inject secret into secret.js
+        run: |
+          echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Default GitHub token provided by GitHub Actions
-          publish_dir: ./  # Adjust to your project directory
-          publish_branch: gh-pages  # Adjust to your GitHub Pages branch
-
-      - name: Inject secret into JS
-        run: |
-          echo "window.DISCORD_WEBHOOK_URL=' ${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
-          cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          publish_dir: ./build  # Adjust to your project's build directory
+          publish_branch: gh-pages
