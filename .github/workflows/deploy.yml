@@ -26,7 +26,7 @@ jobs:
 
       - name: Inject secret into rp_calculator.js
         run: |
-          echo "const webhookURL = '${{ secrets.DISCORD_WEBHOOK }}';" > rp_calculator.js.tmp
+          echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK }}';" > rp_calculator.js.tmp
           cat rp_calculator.js >> rp_calculator.js.tmp
           mv rp_calculator.js.tmp rp_calculator.js
 

@@ -1,6 +1,10 @@
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
+console.log('DISCORD_WEBHOOK:', window.DISCORD_WEBHOOK_URL); // Ensure correct logging
+
+// Define webhookURL using window.DISCORD_WEBHOOK_URL
+const webhookURL = window.DISCORD_WEBHOOK_URL;
 
 // Function to fetch VP packages from the JSON file (for browser)
 async function fetchVPPackages() {
