@@ -157,13 +157,7 @@ function resetCalculator() {
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
-    const webhookURL = webhookURL;
-
     try {
-        if (!webhookURL) {
-            throw new Error('Webhook URL is not defined.');
-        }
-
         const response = await fetch(webhookURL, {
             method: 'POST',
             headers: {
