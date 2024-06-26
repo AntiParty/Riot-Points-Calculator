@@ -22,12 +22,12 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npm run build  # This should now execute your build script
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Default GitHub token provided by GitHub Actions
           publish_dir: ./  # Adjust to your project directory
           publish_branch: gh-pages  # Adjust to your GitHub Pages branch
 
