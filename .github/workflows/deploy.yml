@@ -29,7 +29,7 @@ jobs:
 
       - name: Inject secret into secret.js
         run: |
-          echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK }}';" > secret.js
+          echo "window.DISCORD_WEBHOOK='${{ secrets.DISCORD_WEBHOOK }}';" > secret.js
 
       - name: Show injected secret.js content
         run: cat secret.js
