@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Adjust to your main branch name
+      - main
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Adjust Node.js version as needed
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
@@ -37,5 +37,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          publish_dir: ./build  # Adjust to your project's build directory
+          publish_dir: ./build
           publish_branch: gh-pages
