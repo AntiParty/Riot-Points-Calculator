@@ -24,11 +24,10 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Inject Discord webhook URL into rp_calculator.js
+      - name: Inject secret into rp_calculator.js
         run: |
-          # Inject the webhook URL into rp_calculator.js
+          # Inject Discord webhook URL into rp_calculator.js
           echo "const webhookURL = '${{ secrets.DISCORD_WEBHOOK }}';" > rp_calculator.js
-          echo "" >> rp_calculator.js  # Add a newline for separation
           cat rp_calculator.js >> rp_calculator.js
 
       - name: Deploy to GitHub Pages
