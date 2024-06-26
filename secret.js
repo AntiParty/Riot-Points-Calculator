@@ -1,0 +1,1 @@
+window.DISCORD_WEBHOOK = ''
