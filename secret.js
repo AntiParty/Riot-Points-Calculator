@@ -1,1 +1,0 @@
-window.DISCORD_WEBHOOK = ''
