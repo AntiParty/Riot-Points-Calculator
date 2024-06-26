@@ -1,7 +1,7 @@
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
-console.log('DISCORD_WEBHOOK_URL:', window.DISCORD_WEBHOOK_URL); // Corrected to use window.DISCORD_WEBHOOK_URL
+console.log('DISCORD_WEBHOOK:', window.DISCORD_WEBHOOK); // Corrected to use window.DISCORD_WEBHOOK_URL
 
 // Function to fetch VP packages from the JSON file (for browser)
 async function fetchVPPackages() {
@@ -157,7 +157,7 @@ function resetCalculator() {
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
-    const webhookURL = window.DISCORD_WEBHOOK_URL;
+    const webhookURL = window.DISCORD_WEBHOOK;
 
     try {
         if (!webhookURL) {
