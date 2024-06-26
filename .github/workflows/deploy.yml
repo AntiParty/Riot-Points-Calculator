@@ -3,41 +3,35 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this to your main branch
+      - main  # Adjust to your main branch name
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Adjust Node.js version as needed
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build  # Adjust based on your build script in package.json
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Adjust to your project directory
+          publish_branch: gh-pages  # Adjust to your GitHub Pages branch
 
       - name: Inject secret into JS
         run: |
           echo "window.DISCORD_WEBHOOK_URL='${{ secrets.DISCORD_WEBHOOK_URL }}';" > secret.js
           cat secret.js rp_calculator.js > temp.js && mv temp.js rp_calculator.js
-
-      - name: Install dependencies and build
-        run: |
-          npm install
-          npm run build  # Adjust based on your build script
-
-      - name: Commit changes
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          git commit -m "Update Discord webhook URL"
-      
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.2
-        with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages  # Adjust based on your deployment configuration
-          FOLDER: ./  # Adjust based on your project directory

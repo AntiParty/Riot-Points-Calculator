@@ -1,0 +1,14 @@
+{
+    "name": "riot-points-calculator",
+    "version": "1.0.0",
+    "description": "A calculator for Riot Points (RP) with Discord integration.",
+    "main": "rp_calculator.js",
+    "scripts": {
+      "start": "node rp_calculator.js"
+      
+    },
+    "author": "antiparty",
+    "license": "MIT",
+    "dependencies": {}
+  }
+  
