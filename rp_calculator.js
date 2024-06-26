@@ -2,10 +2,10 @@ let items = [];
 let totalRP = 0;
 let vpPackages = [];
 
-// Function to fetch VP packages from the JSON file (for browser)
+// Function to fetch VP packages (used in both environments)
 async function fetchVPPackages() {
     try {
-        const response = await fetch('vpPackages.json');
+        const response = await fetch('vpPackages.json'); // For browser fetch API
         vpPackages = await response.json();
         console.log('VP Packages fetched:', vpPackages);
     } catch (error) {
@@ -13,151 +13,74 @@ async function fetchVPPackages() {
     }
 }
 
-// Browser-specific event listeners and operations
-if (typeof window !== 'undefined') {
-    // Call the function to fetch VP packages on page load
-    fetchVPPackages();
-
-    // DOM manipulation and interaction
-    document.addEventListener('DOMContentLoaded', function() {
-        const addItemButton = document.getElementById('addItemButton');
-        const currencySelect = document.getElementById('currency');
-
-        addItemButton.addEventListener('click', function() {
-            addItem();
-            calculateVP();
-        });
-
-        currencySelect.addEventListener('change', function() {
-            if (totalRP > 0) {
-                calculateVP();
-            }
-        });
-
-        document.getElementById('feedbackButton').addEventListener('click', function() {
-            document.getElementById('feedbackModal').style.display = 'block';
-        });
-
-        document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('feedbackModal').style.display = 'none';
-        });
-
-        document.getElementById('feedbackForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const feedback = document.getElementById('feedback').value;
-            sendFeedback(feedback);
-            alert('Thank you for your feedback!');
-            document.getElementById('feedbackModal').style.display = 'none';
-        });
-    });
-}
-
-// Function to add an item (for browser)
-function addItem() {
-    if (typeof window !== 'undefined') {
-        let rpCost = document.getElementById('itemCost').value.trim();
-        let currency = document.getElementById('currency').value;
-
-        if (rpCost === '' || currency === 'none') {
-            alert('Please enter RP cost and select a currency.');
-            return;
-        }
-
-        items.push(parseFloat(rpCost));
-        totalRP += parseFloat(rpCost);
-        updateItemList();
-        updateTotalRP(totalRP);
+// Function to handle adding an item
+function addItem(rpCost) {
+    if (rpCost === '' || isNaN(rpCost)) {
+        throw new Error('RP cost must be a number.');
     }
+    items.push(parseFloat(rpCost));
+    totalRP += parseFloat(rpCost);
 }
 
-// Function to update the item list (for browser)
+// Function to update the item list
 function updateItemList() {
-    if (typeof window !== 'undefined') {
-        const itemList = document.getElementById('itemList');
-        itemList.innerHTML = '';
-
-        items.forEach((cost, index) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Item ${index + 1}: ${cost} RP`;
-            itemList.appendChild(listItem);
-        });
-    }
+    return items.map((cost, index) => `Item ${index + 1}: ${cost} RP`).join('<br>');
 }
 
-// Function to update the total RP (for browser)
-function updateTotalRP(totalRP) {
-    if (typeof window !== 'undefined') {
-        document.getElementById('totalRPValue').textContent = totalRP.toFixed(0);
+// Function to calculate VP needed
+function calculateVP(selectedCurrency) {
+    let vpNeeded = totalRP;
+    let selectedPackages = [];
+    let totalCost = 0;
+
+    for (let i = vpPackages.length - 1; i >= 0; i--) {
+        while (vpNeeded >= vpPackages[i].vp) {
+            vpNeeded -= vpPackages[i].vp;
+            selectedPackages.push(vpPackages[i]);
+            totalCost += vpPackages[i].costs[selectedCurrency];
+        }
     }
+
+    if (vpNeeded > 0) {
+        selectedPackages.push(vpPackages[0]);
+        totalCost += vpPackages[0].costs[selectedCurrency];
+    }
+
+    return { selectedPackages, totalCost };
 }
 
-// Function to calculate VP (for browser)
-function calculateVP() {
-    if (typeof window !== 'undefined') {
-        let vpNeeded = totalRP;
-        let selectedPackages = [];
-        let totalCost = 0;
-        const selectedCurrency = document.getElementById('currency').value;
+// Example function to send feedback (replace with actual implementation)
+async function sendFeedback(feedback) {
+    try {
+        const webhookURL = process.env.DISCORD_WEBHOOK_URL; // Use environment variable for Node.js
 
-        for (let i = vpPackages.length - 1; i >= 0; i--) {
-            while (vpNeeded >= vpPackages[i].vp) {
-                vpNeeded -= vpPackages[i].vp;
-                selectedPackages.push(vpPackages[i]);
-                totalCost += vpPackages[i].costs[selectedCurrency];
-            }
+        if (!webhookURL) {
+            throw new Error('Webhook URL is not defined.');
         }
 
-        if (vpNeeded > 0) {
-            selectedPackages.push(vpPackages[0]);
-            totalCost += vpPackages[0].costs[selectedCurrency];
-        }
-
-        updateTotalVP(selectedPackages);
-        updateVPPackages(selectedPackages, totalCost, selectedCurrency);
-    }
-}
-
-// Function to update total VP (for browser)
-function updateTotalVP(packages) {
-    if (typeof window !== 'undefined') {
-        const totalVP = packages.reduce((total, pkg) => total + pkg.vp, 0);
-        document.getElementById('totalVPValue').textContent = totalVP.toFixed(2);
-    }
-}
-
-// Function to update VP packages display (for browser)
-function updateVPPackages(packages, totalCost, currency) {
-    if (typeof window !== 'undefined') {
-        const vpPackagesDiv = document.getElementById('vpPackages');
-        vpPackagesDiv.innerHTML = '';
-
-        packages.forEach(pkg => {
-            const packageElement = document.createElement('p');
-            packageElement.textContent = `${pkg.vp} VP - ${currency} ${pkg.costs[currency].toFixed(2)}`;
-            vpPackagesDiv.appendChild(packageElement);
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: `**User Feedback:** ${feedback}` })
         });
 
-        const totalCostElement = document.createElement('p');
-        totalCostElement.innerHTML = `Total Cost: <span class="total-cost">${currency} ${totalCost.toFixed(2)}</span>`;
-        vpPackagesDiv.appendChild(totalCostElement);
+        if (response.ok) {
+            console.log('Feedback sent successfully');
+        } else {
+            throw new Error(`Error sending feedback: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error sending feedback:', error.message);
     }
 }
 
-// Function to reset the calculator (for browser)
-function resetCalculator() {
-    if (typeof window !== 'undefined') {
-        items = [];
-        totalRP = 0;
-        updateItemList();
-        updateTotalRP(0);
-        updateVPPackages([], 0, 'USD'); // Assuming USD is default
-    }
-}
-
-// Feedback modal event listeners and sendFeedback function
-function sendFeedback(feedback) {
-    // This function can be adjusted based on where it's executed (browser or server)
-    // For browser, you might use the fetch API with a predefined webhook URL
-    // For server-side (Node.js), you would typically use Node.js HTTP libraries or frameworks
-    console.log('Feedback sent:', feedback);
-}
+// Export functions for use in Node.js or other modules
+module.exports = {
+    fetchVPPackages,
+    addItem,
+    updateItemList,
+    calculateVP,
+    sendFeedback
+};
