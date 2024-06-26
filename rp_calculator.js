@@ -2,7 +2,9 @@
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
-console.log('DISCORD_WEBHOOK_URL:', window.env.DISCORD_WEBHOOK_URL);
+console.log('window.env:', window.env); // Check if window.env is defined
+console.log('DISCORD_WEBHOOK_URL:', window.env.DISCORD_WEBHOOK_URL); // Check if DISCORD_WEBHOOK_URL is defined
+
 
 
 // Function to fetch VP packages from the JSON file (for browser)
