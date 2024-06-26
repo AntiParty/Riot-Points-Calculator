@@ -164,19 +164,7 @@ async function sendFeedback(feedback) {
             throw new Error('Webhook URL is not defined.');
         }
 
-        const response = await fetch(webhookURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ content: `**User Feedback:** ${feedback}` })
-        });
-
-        if (response.ok) {
-            console.log('Feedback sent successfully');
-        } else {
-            console.error('Error sending feedback:', response.statusText);
-        }
+        // Rest of your code
     } catch (error) {
         console.error('Error sending feedback:', error.message);
     }
