@@ -1,7 +1,7 @@
 let items = [];
 let totalRP = 0;
 let vpPackages = [];
-console.log('DISCORD_WEBHOOK:', window.DISCORD_WEBHOOK_URL);
+console.log('DISCORD_WEBHOOK_URL:', window.env.DISCORD_WEBHOOK_URL);
 
 // Function to fetch VP packages from the JSON file (for browser)
 async function fetchVPPackages() {
@@ -157,14 +157,26 @@ function resetCalculator() {
 
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
-    const webhookURL = window.DISCORD_WEBHOOK_URL;
+    const webhookURL = window.env.DISCORD_WEBHOOK_URL;
 
     try {
         if (!webhookURL) {
             throw new Error('Webhook URL is not defined.');
         }
 
-        // Rest of your code
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: `**User Feedback:** ${feedback}` })
+        });
+
+        if (response.ok) {
+            console.log('Feedback sent successfully');
+        } else {
+            console.error('Error sending feedback:', response.statusText);
+        }
     } catch (error) {
         console.error('Error sending feedback:', error.message);
     }

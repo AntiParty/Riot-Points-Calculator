@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # Adjust to your main branch name
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14'  # Adjust Node.js version as needed
 
       - name: Install dependencies
         run: npm install
@@ -24,16 +24,14 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Inject secret into rp_calculator.js
+      - name: Inject environment variable into JavaScript
         run: |
-          sed -i "s|window.DISCORD_WEBHOOK_URL = ''|window.DISCORD_WEBHOOK_URL = '${{ secrets.DISCORD_WEBHOOK }}'|" rp_calculator.js
-
-      - name: Show content of rp_calculator.js
-        run: cat rp_calculator.js
+          echo "window.env = { DISCORD_WEBHOOK_URL: '${{ secrets.DISCORD_WEBHOOK_URL }}' };" > env.js
+          sed -i "1s/^/import './env.js';\n/" rp_calculator.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./build  # Adjust to your project's build directory
           publish_branch: gh-pages
