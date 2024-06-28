@@ -30,4 +30,3 @@ jobs:
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           publish_dir: .  # Adjust if your build output is in a different directory
-          publish_branch:   # Change this to your deployment branch (e.g., gh-pages)
