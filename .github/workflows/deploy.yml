@@ -23,7 +23,8 @@ jobs:
 
       - name: Replace webhook URL
         run: |
-          node -e "const fs = require('fs'); let content = fs.readFileSync('rp_calculator.js', 'utf8'); content = content.replace('PLACEHOLDER_FOR_WEBHOOK_URL', '${{ secrets.DISCORD_WEBHOOK_URL }}'); fs.writeFileSync('rp_calculator.js', content);"      
+          # Use sed command for inline replacement in rp_calculator.js
+          sed -i "s|PLACEHOLDER_FOR_WEBHOOK_URL|${{ secrets.DISCORD_WEBHOOK_URL }}|" rp_calculator.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
