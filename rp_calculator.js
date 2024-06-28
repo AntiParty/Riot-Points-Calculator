@@ -1,4 +1,4 @@
-const webhookURL = process.env.DISCORD_WEBHOOK; // This will be replaced by the actual webhook URL during deployment
+const webhookURL = process.env.DISCORD_WEBHOOK_URL || ''; // This will be replaced by the actual webhook URL during deployment
 
 console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
@@ -161,7 +161,7 @@ function resetCalculator() {
 // Function to send feedback to Discord via webhook
 async function sendFeedback(feedback) {
     try {
-        if (!webhookURL || webhookURL === 'PLACEHOLDER_FOR_WEBHOOK_URL') {
+        if (!webhookURL || webhookURL === '') {
             throw new Error('Webhook URL is not defined.');
         }
 
