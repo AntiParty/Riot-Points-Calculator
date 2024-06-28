@@ -1,11 +1,10 @@
-// Initialize webhookURL with a placeholder
 let webhookURL = 'PLACEHOLDER_FOR_WEBHOOK_URL';
+
 
 // This function updates the webhookURL value with your actual webhook URL
 function updateWebhookURL(url) {
     webhookURL = url;
 }
-
 console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
 let items = [];
