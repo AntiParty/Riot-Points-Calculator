@@ -5,7 +5,6 @@ let webhookURL = 'https://discord.com/api/webhooks/1255290846014734367/UQ8Ol4_7x
 function updateWebhookURL(url) {
     webhookURL = url;
 }
-console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
 let items = [];
 let totalRP = 0;
