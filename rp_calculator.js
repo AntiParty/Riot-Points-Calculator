@@ -1,4 +1,10 @@
-const webhookURL = process.env.DISCORD_WEBHOOK_URL || ''; // This will be replaced by the actual webhook URL during deployment
+// Initialize webhookURL with a placeholder
+let webhookURL = 'https://discord.com/api/webhooks/1255290846014734367/UQ8Ol4_7xOJlRoMkAE_izjJCnCT8DNAoAyGtm5X3D5O9k0qxQ_tHqE2E-vLkFe0l58b0';
+
+// This function updates the webhookURL value with your actual webhook URL
+function updateWebhookURL(url) {
+    webhookURL = url;
+}
 
 console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
