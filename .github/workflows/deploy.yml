@@ -22,19 +22,12 @@ jobs:
         run: npm install
 
       - name: Replace webhook URL
-        run: sed -i "s|PLACEHOLDER_FOR_WEBHOOK_URL|${{ secrets.DISCORD_WEBHOOK_URL }}|" rp_calculator.js
+        run: |
+          node -e "const fs = require('fs'); let content = fs.readFileSync('rp_calculator.js', 'utf8'); content = content.replace('PLACEHOLDER_FOR_WEBHOOK_URL', '${{ secrets.DISCORD_WEBHOOK_URL }}'); fs.writeFileSync('rp_calculator.js', content);"      
 
-      - name: Deploy to temporary branch
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           publish_dir: .  # Adjust if your build output is in a different directory
-          publish_branch: gh-pages  # Use a temporary branch name
-
-      - name: Update main branch
-        run: |
-          git checkout main
-          git pull
-          git merge gh-pages --no-commit --no-ff
-          git commit -m "Update main branch with deployment changes"
-          git push origin main
+          publish_branch: gh-pages  # Change this to your deployment branch (e.g., gh-pages)
