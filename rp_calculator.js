@@ -1,4 +1,4 @@
-const webhookURL = 'ssssssssssssssssssssssssssssssssssssssssssssssssss'; // This will be replaced by the actual webhook URL during deployment
+const webhookURL = process.env.DISCORD_WEBHOOK; // This will be replaced by the actual webhook URL during deployment
 
 console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
