@@ -5,7 +5,6 @@ let webhookURL = 'PLACEHOLDER_FOR_WEBHOOK_URL'; // testing
 function updateWebhookURL(url) {
     webhookURL = url;
 }
-console.log('DISCORD_WEBHOOK_URL:', webhookURL);
 
 let items = [];
 let totalRP = 0;
