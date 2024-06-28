@@ -3048,3 +3048,6 @@ node_modules/wildcard/test/arrays.js
 node_modules/wildcard/test/objects.js
 node_modules/wildcard/test/strings.js
 .env
+.env
+webpack.config.js
+/dist

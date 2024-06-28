@@ -8,10 +8,5 @@
     "build": "webpack --config webpack.config.js"
   },
   "author": "Antiparty",
-  "license": "MIT",
-  "devDependencies": {
-    "dotenv-webpack": "^8.1.0",
-    "webpack": "^5.0.0",
-    "webpack-cli": "^4.10.0"
-  }
+  "license": "MIT"
 }
