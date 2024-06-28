@@ -22,7 +22,8 @@ jobs:
         run: npm install
 
       - name: Replace webhook URL
-        run: sed -i 's|PLACEHOLDER_FOR_WEBHOOK_URL|${{ secrets.DISCORD_WEBHOOK }}|' rp_calculator.js
+        run: sed -i "s|PLACEHOLDER_FOR_WEBHOOK_URL|${{ secrets.DISCORD_WEBHOOK_URL }}|" rp_calculator.js
+      
       
 
       - name: Deploy to GitHub Pages
