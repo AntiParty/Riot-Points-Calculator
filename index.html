@@ -1,77 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riot Points Calculator</title>
-    <link rel="icon" href="https://seeklogo.com/images/V/valorant-logo-FAB2CA0E55-seeklogo.com.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+    <link
+      rel="icon"
+      href="https://seeklogo.com/images/V/valorant-logo-FAB2CA0E55-seeklogo.com.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="style.css" />
     <script src="rp_calculator.js" defer></script>
-        <!-- Meta tags for SEO -->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience.">
-        <meta name="keywords" content="Valorant, bundle cost calculator, Valorant tool, gaming tool, Valorant bundles, lowest prices, multiple currencies, regional price comparison, gaming calculator">
-        <meta name="author" content="Your Name">
-        <meta name="robots" content="index, follow">
-        <meta name="rating" content="General">
-        <meta name="revisit-after" content="7 days">
-        <meta http-equiv="Content-Language" content="en">
-        <meta property="og:title" content="Valorant Bundle Cost Calculator">
-        <meta property="og:description" content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience.">
-        <meta property="og:image" content="https://i.imgur.com/mAektWs.png">
-        <meta property="og:url" content="https://antiparty.github.io/Riot-Points-Calculator/">
-        <meta property="og:type" content="website">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Valorant Bundle Cost Calculator">
-        <meta name="twitter:description" content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience.">
-        <meta name="twitter:image" content="https://i.imgur.com/mAektWs.png">
-        <meta name="twitter:site" content="@AntipartVAL">
-        <link rel="canonical" href="https://antiparty.github.io/Riot-Points-Calculator/">
-        <link rel="icon" href="https://i.imgur.com/mAektWs.png" type="image/x-icon">
-</head>
-<body>
+    <!-- Meta tags for SEO -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience."
+    />
+    <meta
+      name="keywords"
+      content="Valorant, bundle cost calculator, Valorant tool, gaming tool, Valorant bundles, lowest prices, multiple currencies, regional price comparison, gaming calculator"
+    />
+    <meta name="author" content="Your Name" />
+    <meta name="robots" content="index, follow" />
+    <meta name="rating" content="General" />
+    <meta name="revisit-after" content="7 days" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta property="og:title" content="Valorant Bundle Cost Calculator" />
+    <meta
+      property="og:description"
+      content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience."
+    />
+    <meta property="og:image" content="https://i.imgur.com/mAektWs.png" />
+    <meta
+      property="og:url"
+      content="https://antiparty.github.io/Riot-Points-Calculator/"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Valorant Bundle Cost Calculator" />
+    <meta
+      name="twitter:description"
+      content="Discover the ultimate Valorant tool to calculate bundle costs and find the lowest prices! Supports multiple currencies, regional price comparisons, and offers advanced features for an enhanced gaming experience."
+    />
+    <meta name="twitter:image" content="https://i.imgur.com/mAektWs.png" />
+    <meta name="twitter:site" content="@AntipartVAL" />
+    <link
+      rel="canonical"
+      href="https://antiparty.github.io/Riot-Points-Calculator/"
+    />
+    <link
+      rel="icon"
+      href="https://i.imgur.com/mAektWs.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1 class="calculator-header">Riot Points Calculator</h1>
-        <div class="input-section">
-            <label for="itemCost">Enter item cost (in VP):</label>
-            <input type="number" id="itemCost" min="0" max="">
-            <button id="addItemButton">Add Item</button>
+      <h1 class="calculator-header">Riot Points Calculator</h1>
+      <div class="input-section">
+        <label for="itemCost">Enter item cost (in VP):</label>
+        <input type="number" id="itemCost" min="0" max="" />
+        <button id="addItemButton">Add Item</button>
+      </div>
+      <div class="currency-section">
+        <label for="currency">Select Currency:</label>
+        <select id="currency">
+          <option value="none" selected>Select Currency</option>
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="AUD">AUD ($)</option>
+        </select>
+      </div>
+      <div class="items-section">
+        <h2>Items</h2>
+        <ul id="itemList"></ul>
+        <p>Total RP: <span id="totalRPValue">0</span></p>
+        <p>Total VP: <span id="totalVPValue">0</span></p>
+        <div id="vpPackages"></div>
+      </div>
+      <button class="reset-button" onclick="resetCalculator()">Reset</button>
+      <button id="feedbackButton">Submit Feedback</button>
+      <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Feedback</h2>
+          <form id="feedbackForm">
+            <label for="feedback">Your Feedback:</label>
+            <textarea id="feedback" rows="4"></textarea>
+            <button type="submit" id="testing-button">Submit</button>
+          </form>
         </div>
-        <div class="currency-section">
-            <label for="currency">Select Currency:</label>
-            <select id="currency">
-                <option value="none" selected>Select Currency</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="GBP">GBP (£)</option>
-                <option value="CAD">CAD (C$)</option>
-                <option value="AUD">AUD ($)</option>
-            </select>
-        </div>
-        <div class="items-section">
-            <h2>Items</h2>
-            <ul id="itemList"></ul>
-            <p>Total RP: <span id="totalRPValue">0</span></p>
-            <p>Total VP: <span id="totalVPValue">0</span></p>
-            <div id="vpPackages"></div>
-        </div>
-        <button class="reset-button" onclick="resetCalculator()">Reset</button>
-        <button id="feedbackButton">Submit Feedback</button>
-        <div id="feedbackModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Feedback</h2>
-                <form id="feedbackForm">
-                    <label for="feedback">Your Feedback:</label>
-                    <textarea id="feedback" rows="4"></textarea>
-                    <button type="submit" id="testing-button">Submit</button>
-                </form>
-            </div>
-        </div>
-        <footer>
-            <p class="author">Made by @Antiparty :3</p>
-        </footer>
+      </div>
+      <footer>
+        <p class="author">Made by @Antiparty :3</p>
+      </footer>
+      <!-- PayPal Donate Button -->
     </div>
-</body>
+  </body>
 </html>
