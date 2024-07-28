@@ -8,9 +8,15 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    color: #ffffff;
+    background: linear-gradient(-45deg, #202020, #1e1e1e, #181818, #141414);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
-
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 .container {
     background-color: #1e1e1e;
     padding: 20px;
@@ -19,19 +25,56 @@ body {
     max-width: 600px;
     width: 100%;
     text-align: center;
+    opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+  animation-delay: 0.2s;
 }
-
+@keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 .calculator-header {
-    font-size: 2.5rem; /* Adjust size as needed */
+    font-size: 2.5rem;
     font-weight: bold;
-    color: #ffffff; /* Text color */
-    margin-bottom: 20px; /* Space below header */
-}
+    color: #ffffff;
+    margin-bottom: 20px;
+    animation: bounceIn 1s ease-in-out;
+  }
+  
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
 
 .input-section, .currency-section, .items-section {
     margin-bottom: 20px;
+    color: white;
 }
-
+.currency-section select {
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .currency-section select:hover {
+    transform: scale(1.05);
+  }
+  
 label {
     font-size: 16px;
     color: #ffffff;
@@ -46,13 +89,15 @@ input[type="number"], select {
     color: #ffffff;
     width: 150px;
     margin-right: 10px;
-    transition: all 0.3s ease;
-}
-
-input[type="number"]:focus, select:focus {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  input[type="number"]:focus, select:focus {
     border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
     outline: none;
-}
+  }
+  
 
 button {
     padding: 10px 15px;
@@ -88,18 +133,19 @@ ul li {
     margin-bottom: 5px;
     font-size: 16px;
     color: #ffffff;
-    animation: fadeIn 0.5s ease-in-out;
-}
+    animation: slideInLeft 0.5s ease-out;
+  }
 
-@keyframes slideIn {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 100; }
-}
+@keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 
 h3 {
     font-size: 18px;
@@ -137,10 +183,15 @@ h3 {
 }
 
 .total-cost {
-    color: green; /* Change color to your preferred color */
-    font-weight: bold; /* Optional: Make the text bold */
-    /* Add any other styles as needed */
+    color: green;
+    font-weight: bold;
+    transition: background-color 0.5s ease;
 }
+
+.total-cost.highlight {
+    background-color: yellow;
+}
+
 
 footer {
     text-align: center;
@@ -227,3 +278,85 @@ footer {
     background-color: #0056b3;
     
 }
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden; /* Ensure tooltips are hidden by default */
+    opacity: 0; /* Hidden by default */
+    width: 200px; /* Adjust width as needed */
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the element */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s, visibility 0.3s; /* Smooth transition for visibility and opacity */
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* Position the arrow at the bottom */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltiptext,
+  .tooltip:focus .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #444;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.notification-icon img {
+    width: 100%;
+    height: auto;
+}
+
+.notification-message {
+    flex: 1;
+}
+html {
+    scroll-behavior: smooth;
+  }

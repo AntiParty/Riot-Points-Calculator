@@ -30,9 +30,17 @@ if (typeof window !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {
         const addItemButton = document.getElementById('addItemButton');
         const currencySelect = document.getElementById('currency');
+        setTimeout(() => {
+            showNotification(
+                'Made by twitch.tv/antiparty',
+                'https://static-cdn.jtvnw.net/jtv_user_pictures/51a63b23-bb89-41be-ba7b-5a145a1a7bf6-profile_image-70x70.png',
+                'https://twitch.tv/antiparty'
+            );
+        }, 10000);
 
         addItemButton.addEventListener('click', function() {
             addItem();
+            showNotification('Item added successfully!');
             calculateVP();
         });
 
@@ -148,6 +156,11 @@ function updateVPPackages(packages, totalCost, currency) {
         const totalCostElement = document.createElement('p');
         totalCostElement.innerHTML = `Total Cost: <span class="total-cost">${currency} ${totalCost.toFixed(2)}</span>`;
         vpPackagesDiv.appendChild(totalCostElement);
+
+        // animation 
+        const totalCostSpan = totalCostElement.querySelector('.total-cost');
+        totalCostSpan.classList.add('highlight');
+        setTimeout(() => totalCostSpan.classList.remove('highlight'), 1000);
     }
 }
 
@@ -185,4 +198,48 @@ async function sendFeedback(feedback) {
     } catch (error) {
         console.error('Error sending feedback:', error.message);
     }
+}
+
+function showNotification(message, iconUrl, linkUrl) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+
+    // Add image icon if provided
+    if (iconUrl) {
+        const iconElement = document.createElement('img');
+        iconElement.className = 'notification-icon';
+        iconElement.src = iconUrl;
+        iconElement.alt = 'Icon';
+        notification.appendChild(iconElement);
+    }
+
+    const messageElement = document.createElement('span');
+    messageElement.className = 'notification-message';
+
+    if (linkUrl) {
+        // Create a link element if URL is provided
+        const linkElement = document.createElement('a');
+        linkElement.href = linkUrl;
+        linkElement.target = '_blank'; // Open link in a new tab
+        linkElement.textContent = message;
+        linkElement.style.color = 'inherit'; // Inherit color from parent
+        linkElement.style.textDecoration = 'underline'; // Add underline
+        messageElement.appendChild(linkElement);
+    } else {
+        messageElement.textContent = message;
+    }
+
+    notification.appendChild(messageElement);
+    document.body.appendChild(notification);
+
+    // Trigger reflow to apply transitions
+    window.getComputedStyle(notification).opacity;
+    notification.classList.add('show');
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300); // Match this to the transition duration
+    }, 3000);
 }

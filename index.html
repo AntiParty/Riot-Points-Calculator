@@ -62,10 +62,14 @@
       <div class="input-section">
         <label for="itemCost">Enter item cost (in VP):</label>
         <input type="number" id="itemCost" min="0" max="" />
-        <button id="addItemButton">Add Item</button>
+        <button id="addItemButton" class="tooltip">Add Item 
+          <span class="tooltiptext">Click to add the entered item price to the list.</span>
+        </button>
       </div>
       <div class="currency-section">
-        <label for="currency">Select Currency:</label>
+        <label for="currency" class="tooltip">Select Currency: 
+          <span class="tooltiptext">Choose the currency for price calculation.</span>
+        </label>
         <select id="currency">
           <option value="none" selected>Select Currency</option>
           <option value="USD">USD ($)</option>
@@ -82,7 +86,9 @@
         <p>Total VP: <span id="totalVPValue">0</span></p>
         <div id="vpPackages"></div>
       </div>
-      <button class="reset-button" onclick="resetCalculator()">Reset</button>
+      <button class="reset-button tooltip" onclick="resetCalculator()">Reset
+        <span class="tooltiptext">Clear's items added in box</span>
+      </button>
       <button id="feedbackButton">Submit Feedback</button>
       <div id="feedbackModal" class="modal">
         <div class="modal-content">
