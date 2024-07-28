@@ -1,4 +1,4 @@
-let webhookURL = 'test'; // testing
+let webhookURL = 'PLACEHOLDER_FOR_WEBHOOK_URL'; // testing
 
 
 // This function updates the webhookURL value with your actual webhook URL
