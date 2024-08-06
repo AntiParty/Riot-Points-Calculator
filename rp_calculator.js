@@ -1,6 +1,5 @@
 let webhookURL = 'PLACEHOLDER_FOR_WEBHOOK_URL'; // testing
 
-
 // This function updates the webhookURL value with your actual webhook URL
 function updateWebhookURL(url) {
     webhookURL = url;
@@ -8,6 +7,7 @@ function updateWebhookURL(url) {
 
 let items = [];
 let totalRP = 0;
+let existingVP = 0;
 let vpPackages = [];
 
 // Function to fetch VP packages from the JSON file (for browser)
@@ -30,6 +30,11 @@ if (typeof window !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {
         const addItemButton = document.getElementById('addItemButton');
         const currencySelect = document.getElementById('currency');
+        const existingVPInput = document.getElementById('existingVP');
+        const feedbackButton = document.getElementById('feedbackButton');
+        const feedbackTooltip = document.createElement('span');
+
+        // Show notification on page load
         setTimeout(() => {
             showNotification(
                 'Made by twitch.tv/antiparty',
@@ -38,19 +43,36 @@ if (typeof window !== 'undefined') {
             );
         }, 10000);
 
+        // Add item button click event
         addItemButton.addEventListener('click', function() {
             addItem();
             showNotification('Item added successfully!');
             calculateVP();
         });
 
+        // Currency select change event
         currencySelect.addEventListener('change', function() {
             if (totalRP > 0) {
                 calculateVP();
             }
         });
 
-        document.getElementById('feedbackButton').addEventListener('click', function() {
+        // Existing VP input event
+        existingVPInput.addEventListener('input', function() {
+            existingVP = parseFloat(existingVPInput.value) || 0;
+            if (totalRP > 0) {
+                calculateVP();
+            }
+        });
+
+        // Feedback button tooltip and disable functionality
+        feedbackTooltip.className = 'tooltiptext';
+        feedbackTooltip.textContent = 'Out of use';
+        feedbackButton.classList.add('tooltip');
+        feedbackButton.appendChild(feedbackTooltip);
+        feedbackButton.disabled = true;
+
+        feedbackButton.addEventListener('click', function() {
             document.getElementById('feedbackModal').style.display = 'block';
         });
 
@@ -68,6 +90,7 @@ if (typeof window !== 'undefined') {
     });
 }
 
+
 // Function to add an item (for browser)
 function addItem() {
     if (typeof window !== 'undefined') {
@@ -83,6 +106,7 @@ function addItem() {
         totalRP += parseFloat(rpCost);
         updateItemList();
         updateTotalRP(totalRP);
+        calculateVP();
     }
 }
 
@@ -110,7 +134,7 @@ function updateTotalRP(totalRP) {
 // Function to calculate VP (for browser)
 function calculateVP() {
     if (typeof window !== 'undefined') {
-        let vpNeeded = totalRP;
+        let vpNeeded = Math.max(totalRP - existingVP, 0);
         let selectedPackages = [];
         let totalCost = 0;
         const selectedCurrency = document.getElementById('currency').value;
@@ -169,6 +193,8 @@ function resetCalculator() {
     if (typeof window !== 'undefined') {
         items = [];
         totalRP = 0;
+        existingVP = 0;
+        document.getElementById('existingVP').value = '';
         updateItemList();
         updateTotalRP(0);
         updateVPPackages([], 0, 'USD'); // Assuming USD is default
